@@ -23,7 +23,7 @@ public class HelloWildFlyController {
     @Value("${host:selenium-hub}")
     public String host;
 
-    private String grid_hub_url = "http://" + host + ":" + port + "/wd/hub";
+    private String grid_hub_url = "http://selenium-hub:4444/wd/hub";
 
     @RequestMapping("hello")
     public String sayHello() {
@@ -33,8 +33,11 @@ public class HelloWildFlyController {
     @RequestMapping("uitest")
     public String startSelenium() {
         try {
+            System.out.println(host);
+            System.out.println(port);
+            System.out.println(grid_hub_url);
             // run against chrome
-//            runWithChrome();
+            runWithChrome();
 
             // run against firefox
             runWithFireFox();
@@ -47,6 +50,7 @@ public class HelloWildFlyController {
     }
 
     private void runWithFireFox() throws MalformedURLException {
+        System.out.println(grid_hub_url);
         RemoteWebDriver drive = new RemoteWebDriver(new URL(grid_hub_url), firefoxCapabilities);
         runGoogleTest(drive);
     }
