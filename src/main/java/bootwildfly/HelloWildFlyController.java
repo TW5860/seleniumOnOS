@@ -17,10 +17,10 @@ public class HelloWildFlyController {
     public static Capabilities chromeCapabilities = DesiredCapabilities.chrome();
     public static Capabilities firefoxCapabilities = DesiredCapabilities.firefox();
 
-    @Value("${port}")
+    @Value("${port:4444}")
     public Integer port;
 
-    @Value("${host}")
+    @Value("${host:selenium-hub}")
     public String host;
 
     private String grid_hub_url = "http://" + host + ":" + port + "/wd/hub";
