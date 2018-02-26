@@ -18,10 +18,10 @@ public class HelloWildFlyController {
     public static Capabilities firefoxCapabilities = DesiredCapabilities.firefox();
 
     @Value("${port}")
-    public Integer port = 4444;
+    public Integer port;
 
     @Value("${host}")
-    public String host = "localhost";
+    public String host;
 
     private String grid_hub_url = "http://" + host + ":" + port + "/wd/hub";
 

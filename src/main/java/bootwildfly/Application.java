@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@ComponentScan
-@EnableAutoConfiguration
+//@Configuration
+//@ComponentScan
+//@EnableAutoConfiguration
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
