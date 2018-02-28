@@ -1,5 +1,5 @@
 selenium-hub:
-  image: selenium/hub
+  build: hub
   ports:
   - 4444:4444
   - 5555:5555
@@ -9,11 +9,13 @@ chrome:
   environment:
     HUB_HOST: selenium-hub
   volumes:
-  - /dev/shm:/dev/shm
+    - /dev/shm:/dev/shm
+  links:
+    - selenium-hub:selenium-hub
 
 firefox:
   image: selenium/node-firefox
   environment:
     HUB_HOST: selenium-hub
-  # links:
-  # - selenium-hub:hub
+  links:
+  - selenium-hub:selenium-hub
