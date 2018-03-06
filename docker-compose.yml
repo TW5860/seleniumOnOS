@@ -2,7 +2,6 @@ selenium-hub:
   build: hub
   ports:
   - 4444:4444
-  - 5555:5555
 
 chrome:
   image: selenium/node-chrome
@@ -14,8 +13,9 @@ chrome:
     - selenium-hub:selenium-hub
 
 firefox:
-  image: selenium/node-firefox
+  build: node/firefox
   environment:
     HUB_HOST: selenium-hub
+    HUB_PORT: 4444
   links:
   - selenium-hub:selenium-hub
