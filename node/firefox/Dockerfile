@@ -47,4 +47,22 @@ RUN wget -O /tmp/firefox.tar.bz2 https://download-installer.cdn.mozilla.net/pub/
 
 RUN tar -C /opt -xjf /tmp/firefox.tar.bz2
 RUN mv /opt/firefox /opt/firefox-$FIREFOX_VERSION
-RUN ln -fs /opt/firefox-$FIREFOX_VERSION/firefox /usr/bin/firefox
+RUN ln -fs "/opt/firefox-$FIREFOX_VERSION/firefox" /usr/bin/firefox-bin
+COPY headless-firefox.sh /usr/bin/firefox
+
+ARG GECKODRIVER_VERSION=latest
+RUN GK_VERSION=$(if [ ${GECKODRIVER_VERSION:-latest} = "latest" ]; then echo $(wget -qO- "https://api.github.com/repos/mozilla/geckodriver/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([0-9.]+)".*/\1/'); else echo $GECKODRIVER_VERSION; fi) \
+  && echo "Using GeckoDriver version: "$GK_VERSION \
+  && wget --no-verbose -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v$GK_VERSION/geckodriver-v$GK_VERSION-linux64.tar.gz \
+  && rm -rf /opt/geckodriver \
+  && tar -C /opt -zxf /tmp/geckodriver.tar.gz \
+  && rm /tmp/geckodriver.tar.gz \
+  && mv /opt/geckodriver /opt/geckodriver-$GK_VERSION \
+  && chmod 755 /opt/geckodriver-$GK_VERSION \
+  && ln -fs /opt/geckodriver-$GK_VERSION /usr/bin/geckodriver
+
+
+COPY generate_config /opt/bin/generate_config
+
+RUN sh /opt/bin/generate_config > /opt/selenium/config.json
+CMD java -Xmx512m -jar /opt/selenium/selenium-server-standalone.jar -role node -hub http://$HUB_HOST:$HUB_PORT/grid/register -nodeConfig /opt/selenium/config.json
