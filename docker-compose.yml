@@ -19,3 +19,10 @@ firefox:
     HUB_PORT: 4444
   links:
   - selenium-hub:selenium-hub
+
+app:
+  build: .
+  links:
+  - selenium-hub:selenium-hub
+  ports:
+  - 8080:8080
