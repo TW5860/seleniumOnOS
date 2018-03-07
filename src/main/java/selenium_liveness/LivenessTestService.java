@@ -1,18 +1,22 @@
 package selenium_liveness;
 
+import io.prometheus.client.Counter;
+import io.prometheus.client.Gauge;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-@RestController
-public class LivenessTestController {
+@Service
+public class LivenessTestService {
 
     private static Capabilities chromeCapabilities = DesiredCapabilities.chrome();
     private static Capabilities firefoxCapabilities = DesiredCapabilities.firefox();
@@ -25,8 +29,17 @@ public class LivenessTestController {
 
     private final static String GRID_HUB_URL = "http://selenium-hub:4444/wd/hub";
 
-    @RequestMapping("uitest")
-    public String startSelenium() {
+    private static final Counter tests = Counter.build()
+            .name("tests_total").help("Total tests run.").register();
+
+    private static final Gauge success = Gauge.build()
+            .name("tests_successful")
+            .help("Was last test run successful?")
+            .register();
+
+    @Scheduled(fixedDelay = 5000)
+    public void startSelenium() {
+        tests.inc();
         try {
             System.out.println(host);
             System.out.println(port);
@@ -39,9 +52,10 @@ public class LivenessTestController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return "FAIL!";
+            success.set(0);
+            return;
         }
-        return "SUCCESS!";
+        success.set(1);
     }
 
     private void runWithFireFox() throws MalformedURLException {

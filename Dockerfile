@@ -1,9 +1,11 @@
 FROM maven:3-jdk-8 AS build
 
-COPY src /app/src
-COPY pom.xml /app/pom.xml
-
 WORKDIR /app
+
+COPY pom.xml /app/pom.xml
+RUN mvn dependency:go-offline
+
+COPY src /app/src
 
 RUN mvn package spring-boot:repackage
 
