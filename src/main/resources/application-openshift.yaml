@@ -1,0 +1,3 @@
+selenium-hub:
+  host: selenium-hub.myproject.svc
+  port: 4444

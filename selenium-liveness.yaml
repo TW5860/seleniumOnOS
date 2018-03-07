@@ -1,0 +1,375 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml --provider openshift --build
+        build-config --build-repo https://github.com/tw5860/seleniumOnOS.git -o selenium-liveness.yaml
+      kompose.version: 1.9.0 ()
+    creationTimestamp: null
+    labels:
+      io.kompose.service: app
+    name: app
+  spec:
+    ports:
+    - name: "8080"
+      port: 8080
+      targetPort: 8080
+    selector:
+      io.kompose.service: app
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml --provider openshift --build
+        build-config --build-repo https://github.com/tw5860/seleniumOnOS.git -o selenium-liveness.yaml
+      kompose.version: 1.9.0 ()
+    creationTimestamp: null
+    labels:
+      io.kompose.service: firefox
+    name: firefox
+  spec:
+    clusterIP: None
+    ports:
+    - name: headless
+      port: 55555
+      targetPort: 0
+    selector:
+      io.kompose.service: firefox
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml --provider openshift --build
+        build-config --build-repo https://github.com/tw5860/seleniumOnOS.git -o selenium-liveness.yaml
+      kompose.version: 1.9.0 ()
+    creationTimestamp: null
+    labels:
+      io.kompose.service: selenium-hub
+    name: selenium-hub
+  spec:
+    ports:
+    - name: "4444"
+      port: 4444
+      targetPort: 4444
+    selector:
+      io.kompose.service: selenium-hub
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml --provider openshift --build
+        build-config --build-repo https://github.com/tw5860/seleniumOnOS.git -o selenium-liveness.yaml
+      kompose.version: 1.9.0 ()
+    creationTimestamp: null
+    labels:
+      io.kompose.service: app
+    name: app
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: app
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: app
+      spec:
+        containers:
+        - image: ' '
+          name: app
+          ports:
+          - containerPort: 8080
+          resources: {}
+          args: ["--spring.profiles.active=openshift"]
+        restartPolicy: Always
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - app
+        from:
+          kind: ImageStreamTag
+          name: app:latest
+      type: ImageChange
+  status: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: app
+    name: app
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: app
+      generation: null
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml --provider openshift --build
+        build-config --build-repo https://github.com/tw5860/seleniumOnOS.git -o selenium-liveness.yaml
+      kompose.version: 1.9.0 ()
+    creationTimestamp: null
+    labels:
+      io.kompose.service: app
+    name: app
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: app:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        ref: master
+        uri: https://github.com/tw5860/seleniumOnOS.git
+      type: Git
+    strategy:
+      dockerStrategy: {}
+      type: Docker
+    triggers:
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml --provider openshift --build
+        build-config --build-repo https://github.com/tw5860/seleniumOnOS.git -o selenium-liveness.yaml
+      kompose.version: 1.9.0 ()
+    creationTimestamp: null
+    labels:
+      io.kompose.service: firefox
+    name: firefox
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: firefox
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: firefox
+      spec:
+        containers:
+        - env:
+          - name: HUB_HOST
+            value: selenium-hub.myproject.svc
+          - name: HUB_PORT
+            value: "4444"
+          image: ' '
+          name: firefox
+          resources: {}
+        restartPolicy: Always
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - firefox
+        from:
+          kind: ImageStreamTag
+          name: firefox:latest
+      type: ImageChange
+  status: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: firefox
+    name: firefox
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: firefox
+      generation: null
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml --provider openshift --build
+        build-config --build-repo https://github.com/tw5860/seleniumOnOS.git -o selenium-liveness.yaml
+      kompose.version: 1.9.0 ()
+    creationTimestamp: null
+    labels:
+      io.kompose.service: firefox
+    name: firefox
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: firefox:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: node/firefox/
+      git:
+        ref: master
+        uri: https://github.com/tw5860/seleniumOnOS.git
+      type: Git
+    strategy:
+      dockerStrategy: {}
+      type: Docker
+    triggers:
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml --provider openshift --build
+        build-config --build-repo https://github.com/tw5860/seleniumOnOS.git -o selenium-liveness.yaml
+      kompose.version: 1.9.0 ()
+    creationTimestamp: null
+    labels:
+      io.kompose.service: selenium-hub
+    name: selenium-hub
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: selenium-hub
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: selenium-hub
+      spec:
+        containers:
+        - image: ' '
+          name: selenium-hub
+          ports:
+          - containerPort: 4444
+          resources: {}
+        restartPolicy: Always
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - selenium-hub
+        from:
+          kind: ImageStreamTag
+          name: selenium-hub:latest
+      type: ImageChange
+  status: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: selenium-hub
+    name: selenium-hub
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: selenium-hub
+      generation: null
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml --provider openshift --build
+        build-config --build-repo https://github.com/tw5860/seleniumOnOS.git -o selenium-liveness.yaml
+      kompose.version: 1.9.0 ()
+    creationTimestamp: null
+    labels:
+      io.kompose.service: selenium-hub
+    name: selenium-hub
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: selenium-hub:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      contextDir: hub/
+      git:
+        ref: master
+        uri: https://github.com/tw5860/seleniumOnOS.git
+      type: Git
+    strategy:
+      dockerStrategy: {}
+      type: Docker
+    triggers:
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+- apiVersion: v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: 'true'
+    creationTimestamp: '2018-03-07T14:07:02Z'
+    name: app
+    namespace: myproject
+  spec:
+    host: app-myproject.192.168.99.100.nip.io
+    port:
+      targetPort: '8080'
+    to:
+      kind: Service
+      name: app
+      weight: 100
+    wildcardPolicy: None
+  status:
+    ingress:
+      - conditions:
+          - lastTransitionTime: '2018-03-07T14:07:02Z'
+            status: 'True'
+            type: Admitted
+        host: app-myproject.192.168.99.100.nip.io
+        routerName: router
+        wildcardPolicy: None
+
+kind: List
+metadata: {}
+

@@ -1,17 +1,18 @@
 package selenium_liveness;
 
+import com.google.common.collect.ImmutableMap;
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.util.UriTemplate;
 
-import javax.annotation.PostConstruct;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -21,13 +22,16 @@ public class LivenessTestService {
     // private static Capabilities chromeCapabilities = DesiredCapabilities.chrome();
     private static Capabilities firefoxCapabilities = DesiredCapabilities.firefox();
 
-    @Value("${port:4444}")
-    private Integer port;
+    private String gridHubUrl;
+    private static final UriTemplate GRID_URI_TEMPLATE = new UriTemplate("http://{host}:{port}/wd/hub");
 
-    @Value("${host:selenium-hub}")
-    private String host;
-
-    private final static String GRID_HUB_URL = "http://selenium-hub:4444/wd/hub";
+    @Autowired
+    public LivenessTestService(@Value("${selenium-hub.host:selenium-hub}") String host,
+                               @Value("${selenium-hub.port:4444}") String port) {
+        gridHubUrl = GRID_URI_TEMPLATE.expand(ImmutableMap.of(
+                "host", host,
+                "port", port)).toString();
+    }
 
     private static final Counter tests = Counter.build()
             .name("tests_total").help("Total tests run.").register();
@@ -41,9 +45,7 @@ public class LivenessTestService {
     public void startSelenium() {
         tests.inc();
         try {
-            System.out.println(host);
-            System.out.println(port);
-            System.out.println(GRID_HUB_URL);
+            System.out.println(gridHubUrl);
             // run against chrome
             // runWithChrome();
 
@@ -59,13 +61,13 @@ public class LivenessTestService {
     }
 
     private void runWithFireFox() throws MalformedURLException {
-        System.out.println(GRID_HUB_URL);
-        RemoteWebDriver drive = new RemoteWebDriver(new URL(GRID_HUB_URL), firefoxCapabilities);
+        System.out.println(gridHubUrl);
+        RemoteWebDriver drive = new RemoteWebDriver(new URL(gridHubUrl), firefoxCapabilities);
         runGoogleTest(drive);
     }
 //
 //    private void runWithChrome() throws MalformedURLException {
-//        RemoteWebDriver driver = new RemoteWebDriver(new URL(GRID_HUB_URL), chromeCapabilities);
+//        RemoteWebDriver driver = new RemoteWebDriver(new URL(gridHubUrl), chromeCapabilities);
 //        runGoogleTest(driver);
 //    }
 

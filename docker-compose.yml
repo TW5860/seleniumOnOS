@@ -3,15 +3,6 @@ selenium-hub:
   ports:
   - 4444:4444
 
-chrome:
-  image: selenium/node-chrome
-  environment:
-    HUB_HOST: selenium-hub
-  volumes:
-    - /dev/shm:/dev/shm
-  links:
-    - selenium-hub:selenium-hub
-
 firefox:
   build: node/firefox
   environment:
