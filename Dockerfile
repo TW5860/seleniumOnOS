@@ -9,6 +9,6 @@ RUN mvn package spring-boot:repackage
 
 FROM openjdk:8
 
-COPY --from=build /app/target/bootwildfly-1.0.war /app/app.war
+COPY --from=build /app/target/selenium-liveness*.war /app/app.war
 
 CMD ["java", "-jar", "/app/app.war"]

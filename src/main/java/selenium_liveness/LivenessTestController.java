@@ -1,4 +1,4 @@
-package bootwildfly;
+package selenium_liveness;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
@@ -12,30 +12,25 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 @RestController
-public class HelloWildFlyController {
+public class LivenessTestController {
 
-    public static Capabilities chromeCapabilities = DesiredCapabilities.chrome();
-    public static Capabilities firefoxCapabilities = DesiredCapabilities.firefox();
+    private static Capabilities chromeCapabilities = DesiredCapabilities.chrome();
+    private static Capabilities firefoxCapabilities = DesiredCapabilities.firefox();
 
     @Value("${port:4444}")
-    public Integer port;
+    private Integer port;
 
     @Value("${host:selenium-hub}")
-    public String host;
+    private String host;
 
-    private String grid_hub_url = "http://selenium-hub:4444/wd/hub";
-
-    @RequestMapping("hello")
-    public String sayHello() {
-        return ("Hello, SpringBoot on Wildfly");
-    }
+    private final static String GRID_HUB_URL = "http://selenium-hub:4444/wd/hub";
 
     @RequestMapping("uitest")
     public String startSelenium() {
         try {
             System.out.println(host);
             System.out.println(port);
-            System.out.println(grid_hub_url);
+            System.out.println(GRID_HUB_URL);
             // run against chrome
             runWithChrome();
 
@@ -50,13 +45,13 @@ public class HelloWildFlyController {
     }
 
     private void runWithFireFox() throws MalformedURLException {
-        System.out.println(grid_hub_url);
-        RemoteWebDriver drive = new RemoteWebDriver(new URL(grid_hub_url), firefoxCapabilities);
+        System.out.println(GRID_HUB_URL);
+        RemoteWebDriver drive = new RemoteWebDriver(new URL(GRID_HUB_URL), firefoxCapabilities);
         runGoogleTest(drive);
     }
 
     private void runWithChrome() throws MalformedURLException {
-        RemoteWebDriver driver = new RemoteWebDriver(new URL(grid_hub_url), chromeCapabilities);
+        RemoteWebDriver driver = new RemoteWebDriver(new URL(GRID_HUB_URL), chromeCapabilities);
         runGoogleTest(driver);
     }
 
