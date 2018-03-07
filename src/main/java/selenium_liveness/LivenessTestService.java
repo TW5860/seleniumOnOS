@@ -7,6 +7,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,6 +20,8 @@ import java.net.URL;
 
 @Service
 public class LivenessTestService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(LivenessTestService.class);
 
     // private static Capabilities chromeCapabilities = DesiredCapabilities.chrome();
     private static Capabilities firefoxCapabilities = DesiredCapabilities.firefox();
@@ -45,23 +49,23 @@ public class LivenessTestService {
     public void startSelenium() {
         tests.inc();
         try {
-            System.out.println(gridHubUrl);
-            // run against chrome
+            LOG.info("Starting test with Selenium Hub at: {}", gridHubUrl);
+
             // runWithChrome();
 
-            // run against firefox
-            runWithFireFox();
+            LOG.info("Run against Firefox.");
+            runWithFirefox();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.info("Test failed, caught exception.", e);
             success.set(0);
             return;
         }
+        LOG.info("Test was successful.");
         success.set(1);
     }
 
-    private void runWithFireFox() throws MalformedURLException {
-        System.out.println(gridHubUrl);
+    private void runWithFirefox() throws MalformedURLException {
         RemoteWebDriver drive = new RemoteWebDriver(new URL(gridHubUrl), firefoxCapabilities);
         runGoogleTest(drive);
     }
@@ -72,9 +76,11 @@ public class LivenessTestService {
 //    }
 
     private void runGoogleTest(RemoteWebDriver driver) {
+        LOG.info("Getting google.com");
         driver.get("https://www.google.com");
+        LOG.info("Clicking a button");
         driver.findElement(By.cssSelector("#tsf > div.tsf-p > div.jsb > center > input[type=\"submit\"]:nth-child(2)")).click();
-        System.out.println(driver.getTitle());
+        LOG.info("Browser title is now: {}", driver.getTitle());
         driver.quit();
     }
 }
