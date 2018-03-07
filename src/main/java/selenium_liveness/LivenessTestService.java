@@ -18,7 +18,7 @@ import java.net.URL;
 @Service
 public class LivenessTestService {
 
-    private static Capabilities chromeCapabilities = DesiredCapabilities.chrome();
+    // private static Capabilities chromeCapabilities = DesiredCapabilities.chrome();
     private static Capabilities firefoxCapabilities = DesiredCapabilities.firefox();
 
     @Value("${port:4444}")
@@ -45,7 +45,7 @@ public class LivenessTestService {
             System.out.println(port);
             System.out.println(GRID_HUB_URL);
             // run against chrome
-            runWithChrome();
+            // runWithChrome();
 
             // run against firefox
             runWithFireFox();
@@ -63,11 +63,11 @@ public class LivenessTestService {
         RemoteWebDriver drive = new RemoteWebDriver(new URL(GRID_HUB_URL), firefoxCapabilities);
         runGoogleTest(drive);
     }
-
-    private void runWithChrome() throws MalformedURLException {
-        RemoteWebDriver driver = new RemoteWebDriver(new URL(GRID_HUB_URL), chromeCapabilities);
-        runGoogleTest(driver);
-    }
+//
+//    private void runWithChrome() throws MalformedURLException {
+//        RemoteWebDriver driver = new RemoteWebDriver(new URL(GRID_HUB_URL), chromeCapabilities);
+//        runGoogleTest(driver);
+//    }
 
     private void runGoogleTest(RemoteWebDriver driver) {
         driver.get("https://www.google.com");
