@@ -17,6 +17,7 @@ import org.springframework.web.util.UriTemplate;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class LivenessTestService {
@@ -67,6 +68,7 @@ public class LivenessTestService {
 
     private void runWithFirefox() throws MalformedURLException {
         RemoteWebDriver drive = new RemoteWebDriver(new URL(gridHubUrl), firefoxCapabilities);
+        drive.manage().timeouts().pageLoadTimeout(1, TimeUnit.SECONDS);
         runGoogleTest(drive);
     }
 //

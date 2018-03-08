@@ -92,6 +92,11 @@ items:
           resources: {}
           command: ["java"]
           args: ["-Dspring.profiles.active=openshift", "-jar", "/app/app.war"]
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              memory: 512Mi
         restartPolicy: Always
     test: false
     triggers:
@@ -187,7 +192,13 @@ items:
           image: ' '
           name: firefox
           resources: {}
+          volumeMounts:
+            - mountPath: /.cache
+              name: cache-volume
         restartPolicy: Always
+        volumes:
+          - name: cache-volume
+            emptyDir: {}
     test: false
     triggers:
     - type: ConfigChange
@@ -353,7 +364,7 @@ items:
     name: app
     namespace: myproject
   spec:
-    host: app-myproject.192.168.99.100.nip.io
+    host: app-myproject.192.168.99.102.nip.io
     port:
       targetPort: '8080'
     to:
@@ -367,7 +378,7 @@ items:
           - lastTransitionTime: '2018-03-07T14:07:02Z'
             status: 'True'
             type: Admitted
-        host: app-myproject.192.168.99.100.nip.io
+        host: app-myproject.192.168.99.102.nip.io
         routerName: router
         wildcardPolicy: None
 
