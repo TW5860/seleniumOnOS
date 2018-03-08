@@ -32,7 +32,8 @@ public class LivenessTestService {
 
     @Autowired
     public LivenessTestService(@Value("${selenium-hub.host:selenium-hub}") String host,
-                               @Value("${selenium-hub.port:4444}") String port) {
+                               @Value("${selenium-hub.http-port:4444}") String port) {
+        System.out.println(port);
         gridHubUrl = GRID_URI_TEMPLATE.expand(ImmutableMap.of(
                 "host", host,
                 "port", port)).toString();
@@ -46,7 +47,7 @@ public class LivenessTestService {
             .help("Was last test run successful?")
             .register();
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 15000)
     public void startSelenium() {
         tests.inc();
         try {
