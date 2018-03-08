@@ -195,7 +195,7 @@ items:
             limits:
               memory: 2Gi
             requests:
-              memory: 512Mi
+              memory: 1Gi
           volumeMounts:
             - mountPath: /.cache
               name: cache-volume
