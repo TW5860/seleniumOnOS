@@ -189,6 +189,8 @@ items:
             value: selenium-hub.myproject.svc
           - name: HUB_PORT
             value: "4444"
+          - name: HOME
+            value: /firefox
           image: ' '
           name: firefox
           resources:
@@ -197,11 +199,11 @@ items:
             requests:
               memory: 1Gi
           volumeMounts:
-            - mountPath: /.cache
-              name: cache-volume
+            - mountPath: /firefox
+              name: home-volume
         restartPolicy: Always
         volumes:
-          - name: cache-volume
+          - name: home-volume
             emptyDir: {}
     test: false
     triggers:

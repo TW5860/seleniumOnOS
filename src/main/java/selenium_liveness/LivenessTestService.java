@@ -68,7 +68,7 @@ public class LivenessTestService {
 
     private void runWithFirefox() throws MalformedURLException {
         RemoteWebDriver drive = new RemoteWebDriver(new URL(gridHubUrl), firefoxCapabilities);
-        drive.manage().timeouts().pageLoadTimeout(1, TimeUnit.SECONDS);
+        drive.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
         runGoogleTest(drive);
     }
 //
