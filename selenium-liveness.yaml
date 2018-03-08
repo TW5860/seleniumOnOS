@@ -191,7 +191,11 @@ items:
             value: "4444"
           image: ' '
           name: firefox
-          resources: {}
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              memory: 512Mi
           volumeMounts:
             - mountPath: /.cache
               name: cache-volume
