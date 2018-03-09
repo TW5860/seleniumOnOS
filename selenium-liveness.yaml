@@ -482,29 +482,14 @@ items:
 - apiVersion: v1
   kind: Route
   metadata:
-    annotations:
-      openshift.io/host.generated: 'true'
-    creationTimestamp: '2018-03-07T14:07:02Z'
-    name: app
-    namespace: myproject
+    name: google-liveness
   spec:
-    host: app-myproject.192.168.99.102.nip.io
     port:
       targetPort: '8080'
     to:
       kind: Service
       name: app
       weight: 100
-    wildcardPolicy: None
-  status:
-    ingress:
-      - conditions:
-          - lastTransitionTime: '2018-03-07T14:07:02Z'
-            status: 'True'
-            type: Admitted
-        host: app-myproject.192.168.99.102.nip.io
-        routerName: router
-        wildcardPolicy: None
 
 kind: List
 metadata: {}
