@@ -81,11 +81,14 @@ public class LivenessTestService {
 //    }
 
     private void runGoogleTest(RemoteWebDriver driver) {
-        LOG.info("Getting google.com");
-        driver.get("https://www.google.com");
-        LOG.info("Clicking a button");
-        driver.findElement(By.cssSelector("#tsf > div.tsf-p > div.jsb > center > input[type=\"submit\"]:nth-child(2)")).click();
-        LOG.info("Browser title is now: {}", driver.getTitle());
-        driver.quit();
+        try {
+            LOG.info("Getting google.com");
+            driver.get("https://www.google.com");
+            LOG.info("Clicking a button");
+            driver.findElement(By.cssSelector("#tsf > div.tsf-p > div.jsb > center > input[type=\"submit\"]:nth-child(2)")).click();
+            LOG.info("Browser title is now: {}", driver.getTitle());
+        } finally {
+            driver.quit();
+        }
     }
 }
