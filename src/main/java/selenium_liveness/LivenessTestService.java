@@ -88,7 +88,6 @@ public class LivenessTestService {
             driver.findElement(By.cssSelector("#tsf > div.tsf-p > div.jsb > center > input[type=\"submit\"]:nth-child(2)")).click();
             LOG.info("Browser title is now: {}", driver.getTitle());
         } finally {
-            driver.close();
             driver.quit();
         }
     }
