@@ -40,10 +40,9 @@ ENV DBUS_SESSION_BUS_ADDRESS=/dev/null
 
 RUN yum install firefox -y
 RUN yum remove firefox -y
-
-ARG FIREFOX_VERSION=58.0.2
-ENV FIREFOX_DOWNLOAD_URL=https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.bz2
-RUN wget -O /tmp/firefox.tar.bz2 https://download-installer.cdn.mozilla.net/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.bz2
+ARG FIREFOX_VERSION=60.0a1
+ENV FIREFOX_DOWNLOAD_URL=https://download-installer.cdn.mozilla.net/pub/firefox/nightly/latest-mozilla-central/firefox-$FIREFOX_VERSION.en-US.linux-x86_64.tar.bz2
+RUN wget -O /tmp/firefox.tar.bz2 $FIREFOX_DOWNLOAD_URL
 
 RUN tar -C /opt -xjf /tmp/firefox.tar.bz2
 RUN mv /opt/firefox /opt/firefox-$FIREFOX_VERSION
@@ -60,8 +59,6 @@ RUN GK_VERSION=$(if [ ${GECKODRIVER_VERSION:-latest} = "latest" ]; then echo $(w
   && mv /opt/geckodriver /opt/geckodriver-$GK_VERSION \
   && chmod 755 /opt/geckodriver-$GK_VERSION \
   && ln -fs /opt/geckodriver-$GK_VERSION /usr/bin/geckodriver
-
-RUN yum install nc -y
 
 COPY generate_config /opt/bin/generate_config
 

@@ -98,6 +98,12 @@ items:
               memory: 1Gi
             requests:
               memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 15
+            timeoutSeconds: 1
         restartPolicy: Always
     test: false
     triggers:
