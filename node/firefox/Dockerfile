@@ -10,11 +10,6 @@ RUN wget --no-verbose https://selenium-release.storage.googleapis.com/3.9/seleni
 RUN yum install bzip2 -y
 RUN yum install gtk3 -y
 
-ENV SCREEN_WIDTH 1360
-ENV SCREEN_HEIGHT 1020
-ENV SCREEN_DEPTH 24
-ENV DISPLAY :99.0
-
 #========================
 # Selenium Configuration
 #========================
@@ -38,8 +33,9 @@ ENV NODE_APPLICATION_NAME ""
 # Following line fixes https://github.com/SeleniumHQ/docker-selenium/issues/87
 ENV DBUS_SESSION_BUS_ADDRESS=/dev/null
 
-RUN yum install firefox -y
-RUN yum remove firefox -y
+# Install dependencies for firefox
+RUN yum deplist firefox | awk '/provider:/ {print $2}' | sort -u | xargs yum -y install
+
 ARG FIREFOX_VERSION=60.0a1
 ENV FIREFOX_DOWNLOAD_URL=https://download-installer.cdn.mozilla.net/pub/firefox/nightly/latest-mozilla-central/firefox-$FIREFOX_VERSION.en-US.linux-x86_64.tar.bz2
 RUN wget -O /tmp/firefox.tar.bz2 $FIREFOX_DOWNLOAD_URL
