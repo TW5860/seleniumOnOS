@@ -24,7 +24,7 @@ public class LivenessTestService {
 
     private static final Logger LOG = LoggerFactory.getLogger(LivenessTestService.class);
 
-    // private static Capabilities chromeCapabilities = DesiredCapabilities.chrome();
+    private static Capabilities chromeCapabilities = DesiredCapabilities.chrome();
     private static Capabilities firefoxCapabilities = DesiredCapabilities.firefox();
 
     private String gridHubUrl;
@@ -45,43 +45,49 @@ public class LivenessTestService {
     private static final Gauge success = Gauge.build()
             .name("tests_successful")
             .help("Was last test run successful?")
+            .labelNames("browser")
             .register();
+
 
     @Scheduled(fixedDelay = 15000)
     public void startSelenium() {
         tests.inc();
+        LOG.info("Starting test with Selenium Hub at: {}", gridHubUrl);
         try {
-            LOG.info("Starting test with Selenium Hub at: {}", gridHubUrl);
-
-            // runWithChrome();
-
+            LOG.info("Run against Chrome.");
+            runWithChrome();
+            LOG.info("Test with Chrome was successful.");
+            success.labels("chrome").set(1);
+        } catch (Exception e) {
+            LOG.info("Test with Chrome failed, caught exception.", e);
+            success.labels("chrome").set(0);
+        }
+        try {
             LOG.info("Run against Firefox.");
             runWithFirefox();
-
+            LOG.info("Test with Firefox was successful.");
+            success.labels("firefox").set(1);
         } catch (Exception e) {
-            LOG.info("Test failed, caught exception.", e);
-            success.set(0);
-            return;
+            LOG.info("Test with Firefox failed, caught exception.", e);
+            success.labels("firefox").set(0);
         }
-        LOG.info("Test was successful.");
-        success.set(1);
     }
 
     private void runWithFirefox() throws MalformedURLException {
         RemoteWebDriver drive = new RemoteWebDriver(new URL(gridHubUrl), firefoxCapabilities);
-        drive.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
-        drive.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        drive.manage().timeouts().setScriptTimeout(5, TimeUnit.SECONDS);
         runGoogleTest(drive);
     }
-//
-//    private void runWithChrome() throws MalformedURLException {
-//        RemoteWebDriver driver = new RemoteWebDriver(new URL(gridHubUrl), chromeCapabilities);
-//        runGoogleTest(driver);
-//    }
+
+    private void runWithChrome() throws MalformedURLException {
+        RemoteWebDriver driver = new RemoteWebDriver(new URL(gridHubUrl), chromeCapabilities);
+        runGoogleTest(driver);
+    }
 
     private void runGoogleTest(RemoteWebDriver driver) {
         try {
+            driver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            driver.manage().timeouts().setScriptTimeout(5, TimeUnit.SECONDS);
             LOG.info("Getting google.com");
             driver.get("https://www.google.com");
             LOG.info("Clicking a button");

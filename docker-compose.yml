@@ -9,6 +9,14 @@ firefox:
   links:
   - selenium-hub:selenium-hub
 
+chrome:
+  build: node/chrome
+  environment:
+    HUB_HOST: selenium-hub
+    HUB_PORT: 4444
+  links:
+  - selenium-hub:selenium-hub
+
 app:
   build: .
   links:
