@@ -1,6 +1,6 @@
 FROM centos:7
 
-EXPOSE 4444
+EXPOSE 5555
 
 RUN yum install java-1.8.0-openjdk -y
 RUN mkdir /opt/selenium

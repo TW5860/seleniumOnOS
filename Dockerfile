@@ -13,4 +13,6 @@ RUN mvn package spring-boot:repackage
 
 RUN cp /app/target/selenium-liveness*.war /app/app.war
 
+EXPOSE 8080
+
 CMD ["java", "-jar", "/app/app.war"]

@@ -1,7 +1,5 @@
 selenium-hub:
   build: hub
-  ports:
-  - 4444:4444
 
 firefox:
   build: node/firefox
