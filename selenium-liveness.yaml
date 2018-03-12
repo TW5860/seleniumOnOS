@@ -160,7 +160,13 @@ items:
         kind: ImageStreamTag
         name: selenium-test:latest
     postCommit: {}
-    resources: {}
+    resources:
+      limits:
+        cpu: "1"
+        memory: "1Gi"
+      requests:
+        cpu: "100m"
+        memory: "512Mi"
     runPolicy: Serial
     source:
       git:
@@ -168,7 +174,10 @@ items:
         uri: https://github.com/tw5860/seleniumOnOS.git
       type: Git
     strategy:
-      dockerStrategy: {}
+      dockerStrategy:
+        from:
+          kind: "DockerImage"
+          name: "rhel7.4:latest"
       type: Docker
     triggers:
     - type: ConfigChange
@@ -272,7 +281,13 @@ items:
         kind: ImageStreamTag
         name: firefox:latest
     postCommit: {}
-    resources: {}
+    resources:
+      limits:
+        cpu: "1"
+        memory: "1Gi"
+      requests:
+        cpu: "100m"
+        memory: "512Mi"
     runPolicy: Serial
     source:
       contextDir: node/firefox/
@@ -281,7 +296,10 @@ items:
         uri: https://github.com/tw5860/seleniumOnOS.git
       type: Git
     strategy:
-      dockerStrategy: {}
+      dockerStrategy:
+        from:
+          kind: "DockerImage"
+          name: "rhel7.4:latest"
       type: Docker
     triggers:
     - type: ConfigChange
@@ -385,7 +403,13 @@ items:
         kind: ImageStreamTag
         name: chrome:latest
     postCommit: {}
-    resources: {}
+    resources:
+      limits:
+        cpu: "1"
+        memory: "1Gi"
+      requests:
+        cpu: "100m"
+        memory: "512Mi"
     runPolicy: Serial
     source:
       contextDir: node/chrome/
@@ -394,7 +418,10 @@ items:
         uri: https://github.com/tw5860/seleniumOnOS.git
       type: Git
     strategy:
-      dockerStrategy: {}
+      dockerStrategy:
+        from:
+          kind: "DockerImage"
+          name: "rhel7.4:latest"
       type: Docker
     triggers:
     - type: ConfigChange
@@ -483,7 +510,13 @@ items:
         kind: ImageStreamTag
         name: selenium-hub:latest
     postCommit: {}
-    resources: {}
+    resources:
+      limits:
+        cpu: "1"
+        memory: "1Gi"
+      requests:
+        cpu: "100m"
+        memory: "512Mi"
     runPolicy: Serial
     source:
       contextDir: hub/
@@ -492,7 +525,10 @@ items:
         uri: https://github.com/tw5860/seleniumOnOS.git
       type: Git
     strategy:
-      dockerStrategy: {}
+      dockerStrategy:
+        from:
+          kind: "DockerImage"
+          name: "rhel7.4:latest"
       type: Docker
     triggers:
     - type: ConfigChange
