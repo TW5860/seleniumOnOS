@@ -35,7 +35,7 @@ ENV NODE_APPLICATION_NAME ""
 ENV DBUS_SESSION_BUS_ADDRESS=/dev/null
 
 # Install dependencies for firefox
-RUN yum deplist firefox | awk '/provider:/ {print $2}' | sort -u | xargs yum --setopt=protected_multilib=false -y install
+RUN yum deplist firefox | awk '/provider:/ {print $2}' | awk -F. '{print $1}' | sort -u | xargs yum -y install
 
 ARG FIREFOX_VERSION=60.0a1
 ENV FIREFOX_DOWNLOAD_URL=https://download-installer.cdn.mozilla.net/pub/firefox/nightly/latest-mozilla-central/firefox-$FIREFOX_VERSION.en-US.linux-x86_64.tar.bz2
