@@ -177,7 +177,7 @@ items:
       dockerStrategy:
         from:
           kind: "DockerImage"
-          name: "grape-spring-boot-base-image:latest"
+          name: "rhel7.4:latest"
       type: Docker
     triggers:
     - type: ConfigChange
