@@ -2,6 +2,7 @@ FROM centos:7
 
 EXPOSE 5555
 
+RUN yum update -y
 RUN yum install java-1.8.0-openjdk -y
 RUN mkdir /opt/selenium
 RUN yum install wget unzip -y
