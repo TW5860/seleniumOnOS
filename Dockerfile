@@ -1,6 +1,8 @@
 FROM centos:7
 
-RUN yum install -y java-1.8.0-openjdk maven
+RUN yum update -y
+RUN yum install -y java-1.8.0-openjdk
+RUN yum install -y maven
 
 WORKDIR /app
 
