@@ -10,7 +10,7 @@ RUN tar xvf apache-maven-$MAVEN_VERSION-bin.tar.gz \
 
 COPY ensure_maven_proxy.sh /app
 COPY generate_proxy_maven_config.sh /app
-RUN /app/ensure_maven/proxy.sh
+RUN /app/ensure_maven_proxy.sh
 
 WORKDIR /app
 
