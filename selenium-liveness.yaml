@@ -100,9 +100,11 @@ items:
           args: ["-Dspring.profiles.active=openshift", "-jar", "/app/app.war"]
           resources:
             limits:
+              cpu: 1
               memory: 1Gi
             requests:
-              memory: 512Mi
+              cpu: 100m
+              memory: 256Mi
           readinessProbe:
             httpGet:
               path: /
@@ -166,7 +168,7 @@ items:
         memory: "1Gi"
       requests:
         cpu: "100m"
-        memory: "512Mi"
+        memory: "256Mi"
     runPolicy: Serial
     source:
       git:
@@ -221,9 +223,11 @@ items:
           name: firefox
           resources:
             limits:
-              memory: 2Gi
+              cpu: "1"
+              memory: "1Gi"
             requests:
-              memory: 1Gi
+              cpu: "100m"
+              memory: "256Mi"
           volumeMounts:
             - mountPath: /firefox
               name: home-volume
@@ -287,7 +291,7 @@ items:
         memory: "1Gi"
       requests:
         cpu: "100m"
-        memory: "512Mi"
+        memory: "256Mi"
     runPolicy: Serial
     source:
       contextDir: node/firefox/
@@ -343,9 +347,11 @@ items:
           name: chrome
           resources:
             limits:
+              cpu: 1
               memory: 2Gi
             requests:
-              memory: 1Gi
+              cpu: 100m
+              memory: 256Mi
           volumeMounts:
             - mountPath: /chrome
               name: home-volume
@@ -409,7 +415,7 @@ items:
         memory: "1Gi"
       requests:
         cpu: "100m"
-        memory: "512Mi"
+        memory: "256Mi"
     runPolicy: Serial
     source:
       contextDir: node/chrome/
@@ -458,7 +464,13 @@ items:
           name: selenium-hub
           ports:
           - containerPort: 4444
-          resources: {}
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
         restartPolicy: Always
     test: false
     triggers:
@@ -516,7 +528,7 @@ items:
         memory: "1Gi"
       requests:
         cpu: "100m"
-        memory: "512Mi"
+        memory: "256Mi"
     runPolicy: Serial
     source:
       contextDir: hub/
