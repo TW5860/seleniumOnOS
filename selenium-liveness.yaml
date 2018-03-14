@@ -93,6 +93,11 @@ items:
         containers:
         - image: ' '
           name: selenium-test
+          env:
+          - name: HUB_HOST
+            value: selenium-hub
+          - name: HUB_PORT
+            value: "4444"
           ports:
           - containerPort: 8080
           resources: {}
@@ -178,8 +183,8 @@ items:
     strategy:
       dockerStrategy:
         from:
-          kind: "DockerImage"
-          name: "rhel7.4:latest"
+          kind: "ImageStreamTag"
+          name: "dlb-openshift-base:7"
       type: Docker
     triggers:
     - type: ConfigChange
@@ -214,7 +219,7 @@ items:
         containers:
         - env:
           - name: HUB_HOST
-            value: selenium-hub.myproject.svc
+            value: selenium-hub
           - name: HUB_PORT
             value: "4444"
           - name: HOME
@@ -302,8 +307,8 @@ items:
     strategy:
       dockerStrategy:
         from:
-          kind: "DockerImage"
-          name: "rhel7.4:latest"
+          kind: "ImageStreamTag"
+          name: "dlb-openshift-base:7"
       type: Docker
     triggers:
     - type: ConfigChange
@@ -338,7 +343,7 @@ items:
         containers:
         - env:
           - name: HUB_HOST
-            value: selenium-hub.myproject.svc
+            value: selenium-hub
           - name: HUB_PORT
             value: "4444"
           - name: HOME
@@ -426,8 +431,8 @@ items:
     strategy:
       dockerStrategy:
         from:
-          kind: "DockerImage"
-          name: "rhel7.4:latest"
+          kind: "ImageStreamTag"
+          name: "dlb-openshift-base:7"
       type: Docker
     triggers:
     - type: ConfigChange
@@ -539,8 +544,8 @@ items:
     strategy:
       dockerStrategy:
         from:
-          kind: "DockerImage"
-          name: "rhel7.4:latest"
+          kind: "ImageStreamTag"
+          name: "dlb-openshift-base:7"
       type: Docker
     triggers:
     - type: ConfigChange

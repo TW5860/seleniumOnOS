@@ -1,0 +1,11 @@
+apiVersion: "v1"
+kind: "ImageStream"
+metadata:
+  name: "dlb-openshift-base"
+spec:
+  dockerImageRepository: "centos"
+  tags:
+    - name: "7"
+      from:
+        kind: DockerImage
+        name: centos:7
