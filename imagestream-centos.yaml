@@ -3,9 +3,9 @@ kind: "ImageStream"
 metadata:
   name: "dlb-openshift-base"
 spec:
-  dockerImageRepository: "rhel7.4"
+  dockerImageRepository: "centos"
   tags:
     - name: "7"
       from:
         kind: DockerImage
-        name: rhel7.4:latest
+        name: centos:7
