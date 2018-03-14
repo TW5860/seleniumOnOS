@@ -37,6 +37,8 @@ public class LivenessTestService {
         gridHubUrl = GRID_URI_TEMPLATE.expand(ImmutableMap.of(
                 "host", host,
                 "port", port)).toString();
+        success.labels("firefox").set(0);
+        success.labels("chrome").set(0);
     }
 
     private static final Counter tests = Counter.build()
@@ -50,18 +52,8 @@ public class LivenessTestService {
 
 
     @Scheduled(fixedDelay = 15000)
-    public void startSelenium() {
-        tests.inc();
-        LOG.info("Starting test with Selenium Hub at: {}", gridHubUrl);
-        try {
-            LOG.info("Run against Chrome.");
-            runWithChrome();
-            LOG.info("Test with Chrome was successful.");
-            success.labels("chrome").set(1);
-        } catch (Exception e) {
-            LOG.info("Test with Chrome failed, caught exception.", e);
-            success.labels("chrome").set(0);
-        }
+    public void scheduledFirefox() {
+        tests.labels("firefox").inc();
         try {
             LOG.info("Run against Firefox.");
             runWithFirefox();
@@ -70,6 +62,20 @@ public class LivenessTestService {
         } catch (Exception e) {
             LOG.info("Test with Firefox failed, caught exception.", e);
             success.labels("firefox").set(0);
+        }
+    }
+
+    @Scheduled(fixedDelay = 15000)
+    public void scheduledChrome() {
+        tests.labels("chrome").inc();
+        try {
+            LOG.info("Run against Chrome.");
+            runWithChrome();
+            LOG.info("Test with Chrome was successful.");
+            success.labels("chrome").set(1);
+        } catch (Exception e) {
+            LOG.info("Test with Chrome failed, caught exception.", e);
+            success.labels("chrome").set(0);
         }
     }
 
