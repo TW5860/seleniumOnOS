@@ -8,6 +8,10 @@ RUN wget http://www-eu.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apa
 RUN tar xvf apache-maven-$MAVEN_VERSION-bin.tar.gz \
     && mv apache-maven-$MAVEN_VERSION /usr/local/apache-maven
 
+COPY ensure_maven_proxy.sh /app
+COPY generate_proxy_maven_config.sh /app
+RUN /app/ensure_maven/proxy.sh
+
 WORKDIR /app
 
 COPY pom.xml /app/pom.xml
