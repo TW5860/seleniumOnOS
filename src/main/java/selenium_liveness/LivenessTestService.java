@@ -42,7 +42,10 @@ public class LivenessTestService {
     }
 
     private static final Counter tests = Counter.build()
-            .name("tests_total").help("Total tests run.").register();
+            .name("tests_total")
+            .help("Total tests run.")
+            .labelNames("browser")
+            .register();
 
     private static final Gauge success = Gauge.build()
             .name("tests_successful")
