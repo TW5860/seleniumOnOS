@@ -1,0 +1,10 @@
+{
+  "port": 4444,
+  "newSessionWaitTimeout": 120,
+  "throwOnCapabilityNotPresent": true,
+  "cleanUpCycle": 5000,
+  "role": "hub",
+  "debug": false,
+  "browserTimeout": 120,
+  "timeout": 180
+}

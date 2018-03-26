@@ -7,5 +7,6 @@ RUN yum install java-1.8.0-openjdk -y
 RUN mkdir /opt/selenium
 RUN yum install wget -y
 RUN wget --no-verbose https://selenium-release.storage.googleapis.com/3.9/selenium-server-standalone-3.9.1.jar -O /opt/selenium/selenium-server-standalone.jar
+COPY config.json config.json
 
-CMD java -jar /opt/selenium/selenium-server-standalone.jar -role hub
+CMD java -jar /opt/selenium/selenium-server-standalone.jar -role hub -hubConfig config.json
