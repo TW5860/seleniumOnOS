@@ -43,8 +43,7 @@ RUN wget -O /tmp/firefox.tar.bz2 $FIREFOX_DOWNLOAD_URL
 
 RUN tar -C /opt -xjf /tmp/firefox.tar.bz2
 RUN mv /opt/firefox /opt/firefox-$FIREFOX_VERSION
-RUN ln -fs "/opt/firefox-$FIREFOX_VERSION/firefox" /usr/bin/firefox-bin
-COPY headless-firefox.sh /usr/bin/firefox
+RUN ln -fs "/opt/firefox-$FIREFOX_VERSION/firefox" /usr/bin/firefox
 
 ARG GECKODRIVER_VERSION=latest
 RUN GK_VERSION=$(if [ ${GECKODRIVER_VERSION:-latest} = "latest" ]; then echo $(wget -qO- "https://api.github.com/repos/mozilla/geckodriver/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([0-9.]+)".*/\1/'); else echo $GECKODRIVER_VERSION; fi) \
@@ -60,4 +59,6 @@ RUN GK_VERSION=$(if [ ${GECKODRIVER_VERSION:-latest} = "latest" ]; then echo $(w
 COPY generate_config /opt/bin/generate_config
 
 RUN sh /opt/bin/generate_config > /opt/selenium/config.json
+
+ENV MOZ_HEADLESS=1
 CMD java -Xmx512m -jar /opt/selenium/selenium-server-standalone.jar -role node -hub http://$HUB_HOST:$HUB_PORT/grid/register -nodeConfig /opt/selenium/config.json -timeout 30 -browserTimeout 60
